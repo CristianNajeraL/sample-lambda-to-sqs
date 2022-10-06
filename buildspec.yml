@@ -25,4 +25,4 @@ phases:
       - echo Pushing the Docker image...
       - docker push $ECR_URI:latest
       - docker push $ECR_URI:$IMAGE_TAG
-      - aws lambda update-function-code --function-name $FUNCTION_NAME --image-uri $ECR_URI:latest
+      - aws lambda update-function-code --function-name $FUNCTION_NAME --image-uri $ECR_URI:$IMAGE_TAG

@@ -16,7 +16,7 @@ phases:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...
-      - docker build -t $ECR_URI:latest .
+      - docker build -t $ECR_URI:latest . --platform linux/amd64
       - docker tag $ECR_URI:latest $ECR_URI:$IMAGE_TAG
       - echo Build completed on `date`
   post_build:

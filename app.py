@@ -10,5 +10,5 @@ def lambda_handler(event, context):
     :return:
     """
     return {
-        "random": random.random()
+        "random": f"This is develop = {random.random()}"
     }

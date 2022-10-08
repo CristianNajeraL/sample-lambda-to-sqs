@@ -34,8 +34,6 @@ region = "ca-central-1"
 # engine = create_engine(
 #     f'postgresql://{user}:{password}@{host}:{port}/{db_name}'
 # )
-client = boto3.client('rds')
-token = client.generate_db_auth_token(DBHostname=host, Port=port, DBUsername=user, Region=region)
 
 
 def lambda_handler(event, context):

@@ -41,6 +41,8 @@ def lambda_handler(event, context):
     Sample handler
     :return:
     """
+    client_ = boto3.client('rds')
+    token = client_.generate_db_auth_token(DBHostname=host, Port=port, DBUsername=user, Region=region)
     try:
         print("Trying to connect")
         conn = psycopg2.connect(host=host, port=port, database=db_name, user=user, password=token,

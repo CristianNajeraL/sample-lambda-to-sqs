@@ -16,6 +16,7 @@ password = secrets["db_password"]
 host = secrets["db_host"]
 port = secrets["db_port"]
 db_name = secrets["db_database"]
+region = "ca-central-1"
 # query = """SELECT usename AS role_name,
 #  CASE
 #   WHEN usesuper AND usecreatedb THEN
@@ -39,6 +40,9 @@ def lambda_handler(event, context):
     Sample handler
     :return:
     """
+    client = boto3.client('rds')
+    token = client.generate_db_auth_token(DBHostname=host, Port=port, DBUsername=user, Region=region)
+    print(token)
     print(f'postgresql://{user}:{password}@{host}:{port}/{db_name}')
 #     df = pd.read_sql(
 #         query,

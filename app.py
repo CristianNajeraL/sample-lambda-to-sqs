@@ -4,6 +4,7 @@ AWS lambda handler to populate SQS
 import os
 import random
 import boto3
+import psycopg2
 import pandas as pd
 from sqlalchemy import create_engine
 
@@ -33,6 +34,8 @@ region = "ca-central-1"
 # engine = create_engine(
 #     f'postgresql://{user}:{password}@{host}:{port}/{db_name}'
 # )
+client = boto3.client('rds')
+token = client.generate_db_auth_token(DBHostname=host, Port=port, DBUsername=user, Region=region)
 
 
 def lambda_handler(event, context):
@@ -40,9 +43,13 @@ def lambda_handler(event, context):
     Sample handler
     :return:
     """
-    client = boto3.client('rds')
-    token = client.generate_db_auth_token(DBHostname=host, Port=port, DBUsername=user, Region=region)
-    print(token)
+    try:
+        print("Trying to connect")
+        conn = psycopg2.connect(host=host, port=port, database=db_name, user=user, password=token,
+                                sslrootcert="SSLCERTIFICATE")
+        print("Connected")
+    except Exception as e:
+        print("Database connection failed due to {}".format(e))
     print(f'postgresql://{user}:{password}@{host}:{port}/{db_name}')
 #     df = pd.read_sql(
 #         query,

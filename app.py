@@ -8,14 +8,14 @@ import pandas as pd
 from sqlalchemy import create_engine
 
 
-# SECRETS_ARN = os.environ["SECRETS_ARN"]
-# client = boto3.client('secretsmanager')
-# secrets = eval(client.get_secret_value(SecretId=SECRETS_ARN)["SecretString"])
-# user = secrets["db_username"]
-# password = secrets["db_password"]
-# host = secrets["db_host"]
-# port = secrets["db_port"]
-# db_name = secrets["db_database"]
+SECRETS_ARN = os.environ["SECRETS_ARN"]
+client = boto3.client('secretsmanager')
+secrets = eval(client.get_secret_value(SecretId=SECRETS_ARN)["SecretString"])
+user = secrets["db_username"]
+password = secrets["db_password"]
+host = secrets["db_host"]
+port = secrets["db_port"]
+db_name = secrets["db_database"]
 # query = """SELECT usename AS role_name,
 #  CASE
 #   WHEN usesuper AND usecreatedb THEN
@@ -39,6 +39,7 @@ def lambda_handler(event, context):
     Sample handler
     :return:
     """
+    print(f'postgresql://{user}:{password}@{host}:{port}/{db_name}')
 #     df = pd.read_sql(
 #         query,
 #         con=engine

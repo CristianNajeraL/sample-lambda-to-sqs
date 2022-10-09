@@ -33,7 +33,6 @@ FROM pg_catalog.pg_user
 ORDER BY role_name desc;"""
 
 
-
 def lambda_handler(event, context):
     """
     Sample handler
@@ -43,20 +42,22 @@ def lambda_handler(event, context):
     token = client_.generate_db_auth_token(DBHostname=host, Port=port, DBUsername=user, Region=region)
     try:
         print("Trying to connect")
-        engine = create_engine(
-            f'postgresql://{user}:{password}@{host}:{port}/{db_name}'
-        )
+        # engine = create_engine(
+        #     f'postgresql://{user}:{password}@{host}:{port}/{db_name}'
+        # )
+        conn = psycopg2.connect(host=host, port=port, database=db_name, user=user, password=password,
+                                sslrootcert="SSLCERTIFICATE")
         print("Connected")
     except Exception as e:
         print("Database connection failed due to {}".format(e))
     print(f'postgresql://{user}:{password}@{host}:{port}/{db_name}')
-    df = pd.read_sql(
-        query,
-        con=engine
-    )
-    roles = list(df['role_name'].astype(str).values)
-    roles = ', '.join(roles)
+    # df = pd.read_sql(
+    #     query,
+    #     con=engine
+    # )
+    # roles = list(df['role_name'].astype(str).values)
+    # roles = ', '.join(roles)
     return {
-        "available_roles": roles,
+        # "available_roles": roles,
         "random": f"This is master = {random.random()}"
     }

@@ -48,5 +48,5 @@ def lambda_handler(event, context):
     roles = ', '.join(roles)
     return {
         "available_roles": roles,
-        "random": f"This is master = {random.random()}"
+        "random": f"This is master = {random.random()}."
     }

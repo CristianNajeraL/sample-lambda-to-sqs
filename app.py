@@ -45,7 +45,7 @@ def lambda_handler(event, context):
         # engine = create_engine(
         #     f'postgresql://{user}:{password}@{host}:{port}/{db_name}'
         # )
-        conn = psycopg2.connect(host=host, port=port, database=db_name, user=user, password=password,
+        conn = psycopg2.connect(host=host, port=port, database=db_name, user=user, password=token,
                                 sslrootcert="SSLCERTIFICATE")
         print("Connected")
     except Exception as e:

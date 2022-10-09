@@ -4,7 +4,6 @@ AWS lambda handler to populate SQS
 import os
 import random
 import boto3
-import psycopg2
 import pandas as pd
 from sqlalchemy import create_engine
 
@@ -17,7 +16,6 @@ password = secrets["db_password"]
 host = secrets["db_host"]
 port = secrets["db_port"]
 db_name = secrets["db_database"]
-region = "ca-central-1"
 query = """SELECT usename AS role_name,
  CASE
   WHEN usesuper AND usecreatedb THEN
@@ -38,26 +36,17 @@ def lambda_handler(event, context):
     Sample handler
     :return:
     """
-    client_ = boto3.client('rds')
-    token = client_.generate_db_auth_token(DBHostname=host, Port=port, DBUsername=user, Region=region)
-    try:
-        print("Trying to connect")
-        # engine = create_engine(
-        #     f'postgresql://{user}:{password}@{host}:{port}/{db_name}'
-        # )
-        conn = psycopg2.connect(host=host, port=port, database=db_name, user=user, password=token,
-                                sslrootcert="SSLCERTIFICATE")
-        print("Connected")
-    except Exception as e:
-        print("Database connection failed due to {}".format(e))
+    engine = create_engine(
+        f'postgresql://{user}:{password}@{host}:{port}/{db_name}'
+    )
     print(f'postgresql://{user}:{password}@{host}:{port}/{db_name}')
-    # df = pd.read_sql(
-    #     query,
-    #     con=engine
-    # )
-    # roles = list(df['role_name'].astype(str).values)
-    # roles = ', '.join(roles)
+    df = pd.read_sql(
+        query,
+        con=engine
+    )
+    roles = list(df['role_name'].astype(str).values)
+    roles = ', '.join(roles)
     return {
-        # "available_roles": roles,
+        "available_roles": roles,
         "random": f"This is master = {random.random()}"
     }

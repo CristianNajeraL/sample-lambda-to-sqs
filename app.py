@@ -31,9 +31,7 @@ region = "ca-central-1"
 #  END role_attributes
 # FROM pg_catalog.pg_user
 # ORDER BY role_name desc;"""
-# engine = create_engine(
-#     f'postgresql://{user}:{password}@{host}:{port}/{db_name}'
-# )
+
 
 
 def lambda_handler(event, context):
@@ -45,8 +43,11 @@ def lambda_handler(event, context):
     token = client_.generate_db_auth_token(DBHostname=host, Port=port, DBUsername=user, Region=region)
     try:
         print("Trying to connect")
-        conn = psycopg2.connect(host=host, port=port, database=db_name, user=user, password=token,
-                                sslrootcert="SSLCERTIFICATE")
+        # conn = psycopg2.connect(host=host, port=port, database=db_name, user=user, password=token,
+        #                         sslrootcert="SSLCERTIFICATE")
+        engine = create_engine(
+            f'postgresql://{user}:{password}@{host}:{port}/{db_name}'
+        )
         print("Connected")
     except Exception as e:
         print("Database connection failed due to {}".format(e))
